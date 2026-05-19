@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NEURAL_CORE // ARCHITECT</title>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          'primary':                  '#f0f4f8',
+          'primary-fixed-dim':        '#00dbe7',
+          'on-primary-fixed':         '#050e0f',
+          'primary-container':        '#0a2024',
+          'surface':                  '#0a0a0a',
+          'surface-container-lowest': '#060606',
+          'surface-container-low':    '#111111',
+          'surface-container-high':   '#1c1c1c',
+          'surface-variant':          '#1a1f25',
+          'on-surface-variant':       '#8a9aaa',
+          'outline':                  '#2a3035',
+          'outline-variant':          '#1a2025',
+        },
+        maxWidth: {
+          'container-max': '1280px',
+        },
+        spacing: {
+          'gutter':          '2rem',
+          'margin-mobile':   '1.25rem',
+          'margin-desktop':  '4rem',
+          'unit':            '1.5rem',
+        },
+        fontSize: {
+          'label-caps': ['0.6875rem', { lineHeight: '1' }],
+          'mono-code':  ['0.8125rem', { lineHeight: '1.5' }],
+        },
+      }
+    }
+  }
+</script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@500;600;700;800&amp;family=Geist+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; filter: blur(40px); }
+            50% { opacity: 0.8; filter: blur(60px); }
+        }
+        @keyframes caret-blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes glow-pulse {
+            0%, 100% { 
+                box-shadow: 0 0 15px rgba(0, 219, 231, 0.3), inset 0 0 10px rgba(0, 219, 231, 0.05);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(0, 219, 231, 0.6), inset 0 0 20px rgba(0, 219, 231, 0.15);
+            }
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes revealText {
+            from { opacity: 0; transform: translateY(14px) scale(0.985); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        
+        :root {
+            --font-display: 'Hanken Grotesk', sans-serif;
+            --font-headline: 'Hanken Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Geist Mono', monospace;
+        }
+        body {
+            background-color: #060606;
+            color: #edf0f2;
+            cursor: none;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            font-family: var(--font-body);
+            font-feature-settings: 'ss01' 1, 'ss02' 1, 'cv01' 1;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .font-display-2xl,
+        .font-display-lg {
+            font-family: var(--font-display);
+            letter-spacing: -0.05em;
+            text-wrap: balance;
+        }
+        .font-display-2xl {
+            font-size: clamp(4rem, 10vw, 9rem);
+            line-height: 0.88;
+            text-transform: uppercase;
+            color: #f8fbfc;
+            text-shadow: 0 0 12px rgba(0, 219, 231, 0.08);
+        }
+
+        /* ── Hero Name Aurora Effect ───────────────────────────────── */
+        @keyframes name-flow {
+            0%   { background-position: 0%   50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0%   50%; }
+        }
+        @keyframes name-glow-pulse {
+            0%, 100% { filter: drop-shadow(0 0 40px rgba(0,219,231,0.35)) drop-shadow(0 0 80px rgba(0,219,231,0.15)); }
+            50%       { filter: drop-shadow(0 0 70px rgba(0,219,231,0.6))  drop-shadow(0 0 120px rgba(141,242,255,0.25)); }
+        }
+        #typed-name {
+            background: linear-gradient(125deg,
+                #ffffff   0%,
+                #c8f7ff  18%,
+                #00dbe7  36%,
+                #8df2ff  52%,
+                #ffffff  68%,
+                #00dbe7  84%,
+                #c8f7ff 100%
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: name-flow 7s ease-in-out infinite, name-glow-pulse 4s ease-in-out infinite;
+            letter-spacing: -0.04em;
+        }
+        #typed-name .text-primary-fixed-dim {
+            background: linear-gradient(125deg, #00dbe7 0%, #8df2ff 40%, #00ffd8 70%, #00dbe7 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: name-flow 4s ease-in-out infinite reverse;
+        }
+        #typed-name .typing-caret {
+            background: #00dbe7;
+            -webkit-text-fill-color: initial;
+        }
+        .font-display-lg {
+            font-size: clamp(2rem, 3.2vw, 3.5rem);
+            line-height: 0.96;
+            color: #f6f8fa;
+            text-shadow: 0 0 8px rgba(0, 219, 231, 0.05);
+        }
+        .font-headline-md {
+            font-family: var(--font-headline);
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            text-wrap: balance;
+        }
+        .font-body-lg,
+        .font-body-sm,
+        .font-mono-code,
+        .font-label-caps {
+            font-family: var(--font-body);
+        }
+        .font-body-lg {
+            font-size: clamp(1rem, 1.05vw, 1.125rem);
+            line-height: 1.8;
+            color: rgba(229, 226, 225, 0.88);
+        }
+        .font-body-sm {
+            line-height: 1.75;
+            color: rgba(229, 226, 225, 0.82);
+        }
+        .font-label-caps {
+            letter-spacing: 0.18em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .font-mono-code {
+            font-family: var(--font-mono);
+            letter-spacing: 0.02em;
+        }
+        .text-cinematic {
+            background: linear-gradient(90deg, #ffffff 0%, #8df2ff 35%, #00dbe7 70%, #ffffff 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-shift 8s ease-in-out infinite;
+        }
+        .text-reveal {
+            opacity: 0;
+            animation: revealText 0.9s ease forwards;
+        }
+        .text-reveal-delayed { animation-delay: 0.18s; }
+        .text-reveal-late { animation-delay: 0.34s; }
+        .text-focus {
+            transition: transform 0.35s ease, text-shadow 0.35s ease, color 0.35s ease;
+        }
+        .text-focus:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 0 16px rgba(0, 219, 231, 0.22);
+            color: #ffffff;
+        }
+        .skill-chip {
+            position: relative;
+        }
+        .skill-chip-icon {
+            transition: transform 0.35s ease, filter 0.35s ease;
+        }
+        .skill-tooltip {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            padding: 0.4rem 0.7rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(8, 8, 8, 0.92);
+            color: #f5fbfc;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+            z-index: 20;
+        }
+        .skill-chip:hover .skill-chip-icon {
+            transform: translateY(-4px) scale(1.08);
+            filter: drop-shadow(0 0 10px rgba(0, 219, 231, 0.25));
+        }
+        .skill-chip:hover .skill-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .hero-copy {
+            text-wrap: balance;
+            max-width: 34ch;
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+        .animate-slide-up { animation: slideInUp 0.6s ease-out; }
+        .animate-slide-down { animation: slideInDown 0.6s ease-out; }
+        .animate-fade { animation: fadeIn 0.6s ease-out; }
+        .animate-scale { animation: scaleIn 0.5s ease-out; }
+        .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+        .typing-caret {
+            display: inline-block;
+            width: 2px;
+            height: 0.85em;
+            background: #00dbe7;
+            margin-left: 8px;
+            vertical-align: baseline;
+            animation: caret-blink 0.9s steps(1) infinite;
+        }
+        
+        .glass-panel {
+            background: rgba(14, 14, 14, 0.5);
+            backdrop-filter: blur(22px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: inset 0 0 16px rgba(0, 219, 231, 0.04);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, rgba(0,219,231,0.2) 100%);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            pointer-events: none;
+        }
+
+        .neon-border-glow {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .neon-border-glow:hover {
+            box-shadow: 0 0 40px rgba(0, 219, 231, 0.4), inset 0 0 20px rgba(0, 219, 231, 0.15);
+            border-color: rgba(0, 219, 231, 0.6);
+            transform: translateY(-6px);
+        }
+        
+        .glass-panel:hover {
+            background: rgba(18, 18, 18, 0.56);
+            border-color: rgba(0, 219, 231, 0.16);
+            box-shadow: 0 0 22px rgba(0, 219, 231, 0.16), inset 0 0 22px rgba(0, 219, 231, 0.06);
+        }
+        
+        a {
+            transition: all 0.3s ease;
+        }
+        
+        button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 219, 231, 0.16);
+        }
+        
+        input, textarea {
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus {
+            background: rgba(30, 30, 30, 0.6);
+            box-shadow: 0 0 20px rgba(0, 219, 231, 0.1);
+        }
+        
+        /* Stagger animations for lists */
+        @media (prefers-reduced-motion: no-preference) {
+            .animate-slide-up:nth-child(1) { animation-delay: 0s; }
+            .animate-slide-up:nth-child(2) { animation-delay: 0.1s; }
+            .animate-slide-up:nth-child(3) { animation-delay: 0.2s; }
+            .animate-slide-up:nth-child(4) { animation-delay: 0.3s; }
+            .animate-slide-up:nth-child(5) { animation-delay: 0.4s; }
+        }
+        
+        /* Text selection styling */
+        ::selection {
+            background: rgba(0, 219, 231, 0.3);
+            color: #00dbe7;
+        }
+        
+        /* Enhanced link styling – only plain text links get the underline sweep */
+        a {
+            position: relative;
+        }
+        
+        a.text-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.3s ease;
+        }
+        
+        a.text-link:hover::after {
+            width: 100%;
+        }
+        /* duplicate body block removed */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #00dbe7;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease-out, width 0.3s, height 0.3s, border-color 0.3s;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(0, 219, 231, 0.3);
+        }
+        .cursor-active {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 219, 231, 0.1);
+            backdrop-filter: invert(0.1);
+            border-color: #00dbe7;
+            box-shadow: 0 0 20px rgba(0, 219, 231, 0.5);
+        }
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 50;
+        }
+        .scroll-progress {
+            position: fixed;
+            top: 0; left: 0; height: 2px;
+            background: #00dbe7;
+            z-index: 100;
+            transition: width 0.1s;
+        }
+        /* #hero-canvas removed – no canvas element in DOM */
+
+        /* Hide scrollbar on carousel rail (all browsers) */
+        .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Timeline styles */
+        .timeline-wrap { position: relative; }
+        .timeline-container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 64px 20px; }
+        .timeline-stage { position: relative; }
+        .timeline-pinned { position: relative; }
+        .timeline-line {
+            position: absolute;
+            left: 50%; transform: translateX(-50%);
+            top: 60px; bottom: 60px; width: 4px; border-radius: 999px;
+            background: linear-gradient(180deg, rgba(0,219,231,0.15), rgba(0,219,231,0.35));
+            box-shadow: 0 0 40px rgba(0,219,231,0.08);
+            z-index: 5;
+            overflow: visible;
+        }
+        .timeline-line::after {
+            content: '';
+            position: absolute; left: 50%; transform: translateX(-50%);
+            top: 0; width: 10px; height: 10px; border-radius: 50%;
+            background: rgba(0,219,231,0.9); box-shadow: 0 0 18px rgba(0,219,231,0.8);
+            transition: transform 0.25s ease;
+        }
+        .timeline-progress {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            top: 60px; width: 8px; height: 0; background: linear-gradient(180deg,#00dbe7,#00ffd8);
+            border-radius: 8px; z-index: 6; pointer-events: none;
+        }
+        .timeline-card { width: calc(50% - 80px); padding: 28px; background: rgba(8,8,8,0.6); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .timeline-item { position: relative; margin: 120px 0; display: grid; grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr); column-gap: 0; align-items: start; }
+        .timeline-item.left,
+        .timeline-item.right { justify-content: stretch; }
+        .timeline-item .card-wrap { width: min(100%, 420px); }
+        .timeline-item.left .card-wrap { grid-column: 1; justify-self: end; }
+        .timeline-item.left .media { grid-column: 3; justify-self: start; }
+        .timeline-item.right .media { grid-column: 1; justify-self: end; }
+        .timeline-item.right .card-wrap { grid-column: 3; justify-self: start; }
+        .timeline-item .media { width: 320px; height: 180px; border-radius: 10px; overflow: hidden; flex-shrink: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+        .timeline-item .media img { width:100%; height:100%; object-fit: cover; transform: translateY(0); transition: transform 0.6s ease; }
+        .timeline-item .timeline-dot { grid-column: 2; justify-self: center; align-self: start; margin-top: 28px; width: 16px; height: 16px; border-radius: 50%; background: #081018; border: 2px solid rgba(0,219,231,0.9); box-shadow: 0 0 20px rgba(0,219,231,0.6); z-index: 7; }
+        .timeline-item .card-anim { opacity: 0; transform: translateY(40px) scale(0.98); transition: all 0.8s cubic-bezier(0.2,0.9,0.2,1); }
+        .timeline-item.in-view .card-anim { opacity: 1; transform: translateY(0) scale(1); }
+        .timeline-item.in-view .media img { transform: translateY(-8px) scale(1.02); }
+        /* Prevent text from merging with center line */
+        .timeline-item.left .card-wrap { padding-right: 56px; text-align: right; }
+        .timeline-item.right .card-wrap { padding-left: 56px; text-align: left; }
+        .timeline-card { width: 100%; max-width: 420px; z-index: 8; }
+        .timeline-card h4 { line-height: 1.15; letter-spacing: -0.02em; }
+        .timeline-card p { line-height: 1.75; overflow-wrap: anywhere; }
+        /* Pinned container to allow scrub-like effect */
+        /* Reduced height to tighten space below the timeline */
+        /* timeline stage grows to fit its content, no artificial clipping */
+        .timeline-stage { height: auto; min-height: 100vh; padding-bottom: 80px; }
+        .timeline-pinned-inner { position: relative; top: 0; }
+        @media (max-width: 900px) {
+            .timeline-line, .timeline-progress { left: 20px; transform: none; }
+            .timeline-item { display: flex; flex-direction: column; margin: 88px 0; gap: 20px; }
+            .timeline-card { width: 100%; max-width: none; }
+            .timeline-item.left, .timeline-item.right { justify-content: center; }
+            .timeline-item .timeline-dot { grid-column: auto; align-self: auto; justify-self: auto; margin-top: 0; left: 20px; transform: none; position: relative; }
+            .timeline-pinned-inner { top: 40px; height: calc(100vh - 80px); }
+        }
+    </style>
+</head>
+<body class="font-body-lg selection:bg-primary-fixed-dim selection:text-on-primary-fixed">
+<div id="custom-cursor"></div>
+<div class="scroll-progress" id="progress-bar"></div>
+<div class="noise-overlay"></div>
+<!-- Ambient Lighting Blobs -->
+<div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-fixed-dim/10 rounded-full blur-[120px] pulse-glow pointer-events-none"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary-fixed-dim/5 rounded-full blur-[120px] pulse-glow pointer-events-none" style="animation-delay: -2s;"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-container-max rounded-full border border-white/10 bg-surface/10 backdrop-blur-xl shadow-2xl z-50 flex justify-between items-center px-gutter py-3">
+<div class="font-display-lg text-primary-fixed-dim tracking-tighter text-[24px]">NEURAL_CORE</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#stations">SKILLS</a>
+<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#streams">PROJECTS</a>
+<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#synopsis">HIGHLIGHTS</a>
+<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#chronicle">TIMELINE</a>
+<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#transmit">CONTACT</a>
+</div>
+<button class="bg-primary-container text-on-primary-fixed px-6 py-2 rounded-full font-label-caps text-label-caps tracking-widest hover:scale-105 transition-transform duration-200">
+        RESUME.SYS
+    </button>
+</nav>
+<main>
+<!-- HERO SECTION -->
+<section class="min-h-screen flex flex-col items-center justify-center relative px-margin-mobile md:px-margin-desktop overflow-hidden bg-black">
+<video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover" src="From KlickPin CF 🪴 Save this clever new year goals roundup to make your next project easier and prettier designed to feel inspiring useful and easy to save and - Pin-563018696668062.mp4"></video>
+<div class="absolute inset-0 bg-black/55"></div>
+<div class="relative z-10 text-center">
+<div class="mb-6 inline-block animate-float">
+<div class="w-52 h-52 md:w-72 md:h-72 rounded-full border-2 border-primary-fixed-dim/60 p-2 relative glass-panel animate-glow-pulse">
+<div class="absolute inset-0 bg-primary-fixed-dim/30 rounded-full blur-2xl"></div>
+<img class="w-full h-full object-cover rounded-full" alt="Lead Architect" src="image.png"/>
+</div>
+</div>
+<h1 class="font-display-2xl md:text-[140px] leading-none mb-4 tracking-tighter pointer-events-none animate-slide-down" id="typed-name" aria-label="SHLOK KUMAR">
+                SHLOK <br/> <span class="text-primary-fixed-dim">KUMAR</span>
+            </h1>
+<p class="font-body-lg hero-copy text-white max-w-2xl mx-auto mb-8 tracking-wide backdrop-blur-sm px-4 py-2 rounded-lg bg-black/40 animate-fade text-focus">
+                Backend developer crafting scalable applications. Passionate about solving real-world problems through code.
+            </p>
+<div class="flex flex-col md:flex-row gap-4 justify-center items-center relative z-20 animate-slide-up">
+<a class="bg-primary-fixed-dim text-on-primary-fixed px-10 py-4 font-label-caps text-label-caps tracking-widest rounded-lg hover:shadow-[0_0_30px_rgba(0,219,231,0.5)] transition-all duration-300" href="#introduction">
+                    EXPLORE ME
+                </a>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 z-10">
+<span class="font-mono-code text-[10px] tracking-[0.4em] text-primary-fixed-dim">SCROLL_DOWN</span>
+<div class="w-[1px] h-12 bg-gradient-to-b from-primary-fixed-dim to-transparent"></div>
+</div>
+</section>
+<!-- INTRODUCTION SECTION -->
+<section id="introduction" class="py-20 md:py-24 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid md:grid-cols-12 gap-8 items-center">
+<div class="md:col-span-7">
+<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-6 animate-slide-down">01 // INTRODUCTION</h2>
+<h3 class="font-display-lg text-cinematic mb-6 leading-tight animate-slide-up">Building Scalable Backends with Clean, Reliable Code</h3>
+<div class="space-y-4 font-body-lg text-on-surface-variant leading-relaxed max-w-2xl md:ml-8 animate-fade" style="animation-delay: 0.2s;">
+<p>Passionate about building impactful products, participating in hackathons, and developing practical software solutions. I specialize in backend development with expertise in Flask, FastAPI, Node.js, and modern databases.</p>
+<p>I focus on crafting scalable APIs, robust authentication systems, and real-time features that solve real-world problems. When coding, I care about performance first, then maintainability, then the elegant details that make great software.</p>
+</div>
+</div>
+<div class="md:col-span-5 flex justify-center">
+<div class="glass-panel rounded-full relative overflow-hidden flex items-center justify-center w-80 h-80 md:w-96 md:h-96">
+<div class="absolute inset-0 bg-gradient-to-br from-primary-fixed-dim/10 via-transparent to-transparent"></div>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,219,231,0.14),transparent_55%)]"></div>
+<img alt="Portrait of the creator" class="w-full h-full object-cover drop-shadow-[0_0_30px_rgba(0,219,231,0.18)]" src="image_2026-05-19_141404357-removebg-preview.png"/>
+</div>
+</div>
+</div>
+</section>
+<!-- ABOUT_ME SECTION -->
+<section class="py-20 md:py-24 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop" id="stations">
+<div class="grid md:grid-cols-12 gap-8 items-center">
+<div class="md:col-span-7">
+<h2 class="font-display-lg text-primary mb-6 leading-tight uppercase tracking-[0.14em] animate-slide-down">02 // TECHNICAL SKILLS</h2>
+<div class="mt-6 glass-panel p-5 rounded-xl animate-scale">
+<h3 class="font-mono-code text-primary-fixed-dim mb-4 text-sm tracking-widest">CORE_COMPETENCIES</h3>
+<div class="grid grid-cols-4 sm:grid-cols-4 gap-3">
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0s;" aria-label="Python">
+<i class="skill-chip-icon devicon-python-plain colored text-[30px]"></i>
+<span class="skill-tooltip">Python</span>
+</div>
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0.05s;" aria-label="JavaScript">
+<i class="skill-chip-icon devicon-javascript-plain colored text-[30px]"></i>
+<span class="skill-tooltip">JavaScript</span>
+</div>
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0.1s;" aria-label="C++">
+<i class="skill-chip-icon devicon-cplusplus-plain colored text-[30px]"></i>
+<span class="skill-tooltip">C++</span>
+</div>
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0.15s;" aria-label="FastAPI">
+<i class="skill-chip-icon devicon-fastapi-plain colored text-[30px]"></i>
+<span class="skill-tooltip">FastAPI</span>
+</div>
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0.2s;" aria-label="Node.js">
+<i class="skill-chip-icon devicon-nodejs-plain colored text-[30px]"></i>
+<span class="skill-tooltip">Node.js</span>
+</div>
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0.25s;" aria-label="MongoDB">
+<i class="skill-chip-icon devicon-mongodb-plain colored text-[30px]"></i>
+<span class="skill-tooltip">MongoDB</span>
+</div>
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0.3s;" aria-label="MySQL">
+<i class="skill-chip-icon devicon-mysql-plain colored text-[30px]"></i>
+<span class="skill-tooltip">MySQL</span>
+</div>
+<div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0.35s;" aria-label="REST APIs">
+<span class="skill-chip-icon material-symbols-outlined text-primary-fixed-dim text-[28px]">api</span>
+<span class="skill-tooltip">REST APIs</span>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-5">
+<div class="glass-panel p-8 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-20">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div class="relative z-10">
+<h3 class="font-mono-code text-primary-fixed-dim mb-4">SYSTEM_STATUS: ACTIVE</h3>
+<ul class="font-mono-code text-sm space-y-3 opacity-80">
+<li class="flex justify-between border-b border-white/5 pb-2"><span>UPTIME:</span> <span>99.9%</span></li>
+<li class="flex justify-between border-b border-white/5 pb-2"><span>LOCATION:</span> <span>VOID_NODE_01</span></li>
+<li class="flex justify-between border-b border-white/5 pb-2"><span>LATENCY:</span> <span>&lt;2ms</span></li>
+<li class="flex justify-between border-b border-white/5 pb-2"><span>CORE_TEMP:</span> <span>OPTIMAL</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SKILLS_MATRIX SECTION -->
+<section class="py-20 md:py-24 bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-10 text-center animate-slide-down">03 // CAPABILITIES</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<!-- Card 1 -->
+<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0s;">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">psychology</span>
+<h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">AI / ML</h3>
+<p class="font-body-sm text-on-surface-variant">Engineering LLM pipelines and generative model integrations for real-time creativity.</p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300">PYTORCH</span>
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300">OPENAI</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.1s;">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">deployed_code</span>
+<h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">WEBGL</h3>
+<p class="font-body-sm text-on-surface-variant">High-performance 3D rendering and shader programming for the modern browser.</p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300">THREE.JS</span>
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300">GLSL</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.2s;">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">settings_input_component</span>
+<h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">INTERFACE</h3>
+<p class="font-body-sm text-on-surface-variant">Architecting intuitive, low-latency interfaces for high-stakes enterprise software.</p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300">REACT</span>
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300">RUST</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.3s;">
+<span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">hub</span>
+<h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">FULL-STACK</h3>
+<p class="font-body-sm text-on-surface-variant">End-to-end deployment of scalable cloud infrastructure and edge computing nodes.</p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded">NEXT.JS</span>
+<span class="font-mono-code text-[10px] bg-white/5 px-2 py-1 border border-white/10 rounded">AWS</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FEATURED_PROJECTS SECTION -->
+<section class="py-20 md:py-24 overflow-hidden" id="streams">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-4 animate-slide-down">04 // ARTIFACTS</h2>
+<h3 class="font-display-lg text-primary animate-slide-up">Featured Projects</h3>
+</div>
+<div class="hidden md:flex gap-4">
+<button id="carousel-prev" aria-label="Previous project" class="p-4 border border-white/10 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<button id="carousel-next" aria-label="Next project" class="p-4 border border-white/10 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div id="project-carousel" class="flex gap-6 px-margin-mobile md:px-margin-desktop overflow-x-auto pb-10 snap-x no-scrollbar" style="scroll-behavior:smooth;">
+<!-- Project 1: TezMechanix -->
+<div class="min-w-[320px] md:min-w-[600px] snap-center group animate-scale">
+<div class="relative h-[340px] mb-5 overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-primary-fixed-dim/20 to-transparent flex items-center justify-center transition-all duration-500">
+<span class="material-symbols-outlined text-primary-fixed-dim text-[80px] opacity-50 group-hover:opacity-80 transition-opacity">build</span>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<span class="font-mono-code text-[10px] text-primary-fixed-dim bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 mb-2 inline-block">NODE.JS + MYSQL</span>
+</div>
+</div>
+<h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">TEZMECHANIX</h4>
+<p class="font-body-sm text-on-surface-variant mb-4">A mechanic booking platform connecting vehicle owners with mechanics. Built with Node.js, Express, and MySQL featuring real-time tracking and service management.</p>
+<a class="font-label-caps text-[10px] tracking-widest text-primary-fixed-dim hover:underline" href="https://github.com" target="_blank">VIEW_ON_GITHUB</a>
+</div>
+<!-- Project 2: Civic Rights AI -->
+<div class="min-w-[320px] md:min-w-[600px] snap-center group animate-scale" style="animation-delay: 0.15s;">
+<div class="relative h-[340px] mb-5 overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-primary-fixed-dim/20 to-transparent flex items-center justify-center transition-all duration-500">
+<span class="material-symbols-outlined text-primary-fixed-dim text-[80px] opacity-50 group-hover:opacity-80 transition-opacity">smart_toy</span>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<span class="font-mono-code text-[10px] text-primary-fixed-dim bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 mb-2 inline-block">FASTAPI + REACT + MONGODB</span>
+</div>
+</div>
+<h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">CIVIC RIGHTS AI ASSISTANT</h4>
+<p class="font-body-sm text-on-surface-variant mb-4">An AI-powered platform for analyzing citizen complaints using NLP. Identifies constitutional rights and provides step-by-step civic guidance built with FastAPI, React, and MongoDB.</p>
+<a class="font-label-caps text-[10px] tracking-widest text-primary-fixed-dim hover:underline" href="https://github.com" target="_blank">VIEW_ON_GITHUB</a>
+</div>
+</div>
+</section>
+<!-- CHRONICLE SECTION -->
+<section class="py-20 md:py-24 max-w-7xl mx-auto px-margin-mobile" id="chronicle">
+    <div class="timeline-wrap">
+        <div class="timeline-container">
+            <h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-6 text-center">05 // TIMELINE</h2>
+            <div class="timeline-stage">
+                <div class="timeline-pinned">
+                    <div class="timeline-pinned-inner">
+                        <div class="timeline-line" aria-hidden="true"></div>
+                        <div class="timeline-progress" id="timeline-progress"></div>
+                        <div class="timeline-items">
+                            <!-- Item 1 -->
+                            <div class="timeline-item left" data-index="0">
+                                <div class="card-wrap timeline-card card-anim">
+                                    <h4 class="font-headline-md text-primary mb-2">Backend Developer</h4>
+                                    <p class="font-mono-code text-primary-fixed-dim mb-2">2025 – Present</p>
+                                    <p class="font-body-sm text-on-surface-variant">Developing backend systems, REST APIs, authentication workflows. Flask, FastAPI, Node.js, MySQL.</p>
+                                </div>
+                                <div class="timeline-dot"></div>
+                                <div class="media"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc" alt="project"/></div>
+                            </div>
+                            <!-- Item 2 -->
+                            <div class="timeline-item right" data-index="1">
+                                <div class="media"><img src="https://images.unsplash.com/photo-1506765515384-028b60a970df?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=def" alt="project"/></div>
+                                <div class="timeline-dot"></div>
+                                <div class="card-wrap timeline-card card-anim">
+                                    <h4 class="font-headline-md text-primary mb-2">Founder — CBNCC</h4>
+                                    <p class="font-mono-code text-primary-fixed-dim mb-2">Netaji Subhas University</p>
+                                    <p class="font-body-sm text-on-surface-variant">Organized coding workshops, technical sessions, and collaborative learning activities.</p>
+                                </div>
+                            </div>
+                            <!-- Removed: TezMechanix and Civic Rights AI Assistant -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 3D VISUAL SECTION -->
+<section class="pt-10 md:pt-12 pb-12 px-margin-mobile">
+<div class="max-w-7xl mx-auto">
+<div class="grid md:grid-cols-12 gap-6 items-center">
+<div class="md:col-span-4">
+<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-4 animate-slide-down">06 // BEYOND THE CODE</h2>
+<h3 class="font-display-lg text-primary mb-4 animate-slide-up">The Person Behind the Terminal</h3>
+<p class="font-body-lg text-on-surface-variant animate-fade">This is Shlok &mdash; a creative mind driven by passion, a part-time motivational speaker inspiring people with words, and a part-time creator turning ideas into reality.</p>
+</div>
+<div class="md:col-span-8">
+        <div class="glass-panel rounded-3xl p-3 md:p-4 overflow-hidden min-h-[380px] md:min-h-[460px] border border-white/10">
+            <video id="timeline-video" src="20260519-1121-47.2148306 (online-video-cutter.com).mp4" autoplay loop muted playsinline preload="auto" class="w-full h-full block rounded-2xl object-cover">
+                Your browser cannot play this video.
+            </video>
+        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- ACHIEVEMENTS SECTION -->
+<section class="py-20 md:py-24 max-w-container-max mx-auto px-margin-mobile">
+<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-6 animate-slide-down">07 // ACHIEVEMENTS</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0s;">
+<h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">HACK4DELHI</h4>
+<p class="font-mono-code text-primary-fixed-dim text-sm mb-3">National Hackathon • Finalist</p>
+<p class="font-body-sm text-on-surface-variant">Finalist in the Hack4Delhi National Hackathon, showcasing innovative backend solutions.</p>
+</div>
+<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.1s;">
+<h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">HACK FOR BHARAT</h4>
+<p class="font-mono-code text-primary-fixed-dim text-sm mb-3">Microsoft • Participant</p>
+<p class="font-body-sm text-on-surface-variant">Participant in Microsoft's Hack for Bharat hackathon at Noida.</p>
+</div>
+<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.2s;">
+<h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">IIT KHARAGPUR HACKATHON</h4>
+<p class="font-mono-code text-primary-fixed-dim text-sm mb-3">National Level • Participant</p>
+<p class="font-body-sm text-on-surface-variant">Competed at India's premier tech hackathon in Kharagpur.</p>
+</div>
+<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.3s;">
+<h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">SMART INDIA HACKATHON</h4>
+<p class="font-mono-code text-primary-fixed-dim text-sm mb-3">Internal • Shortlisted</p>
+<p class="font-body-sm text-on-surface-variant">Shortlisted for Smart India Hackathon at Netaji Subhas University.</p>
+</div>
+</div>
+</section>
+<!-- SYNOPSIS SECTION -->
+<section class="py-20 md:py-24 px-margin-mobile" id="synopsis">
+<div class="max-w-container-max mx-auto">
+<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-10 text-center">08 // HIGHLIGHTS</h2>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="glass-panel p-8 rounded-xl relative">
+<span class="material-symbols-outlined absolute top-5 right-5 text-primary-fixed-dim/20 text-[52px]">code</span>
+<p class="font-body-lg text-primary mb-6 leading-relaxed">"Strong backend fundamentals and ability to build scalable systems. Great addition to any technical team."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant border border-white/10 flex items-center justify-center hover:border-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-primary-fixed-dim">person</span>
+</div>
+<div>
+<h5 class="font-headline-md text-[18px] text-primary">Faculty Mentor</h5>
+<p class="font-mono-code text-[12px] text-primary-fixed-dim">NETAJI SUBHAS UNIVERSITY</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-xl relative">
+<span class="material-symbols-outlined absolute top-5 right-5 text-primary-fixed-dim/20 text-[52px]">auto_awesome</span>
+<p class="font-body-lg text-primary mb-6 leading-relaxed">"Problem solver with deep focus on backend architecture and API design. Builds production-ready systems."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant border border-white/10 flex items-center justify-center hover:border-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-primary-fixed-dim">person</span>
+</div>
+<div>
+<h5 class="font-headline-md text-[18px] text-primary">Project Peer</h5>
+<p class="font-mono-code text-[12px] text-primary-fixed-dim">HACKATHON COLLABORATOR</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-xl relative">
+<span class="material-symbols-outlined absolute top-5 right-5 text-primary-fixed-dim/20 text-[52px]">trending_up</span>
+<p class="font-body-lg text-primary mb-6 leading-relaxed">"Passionate about building products that solve real problems. Excellent problem-solving and coding skills."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant border border-white/10 flex items-center justify-center hover:border-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-primary-fixed-dim">person</span>
+</div>
+<div>
+<h5 class="font-headline-md text-[18px] text-primary">University Peer</h5>
+<p class="font-mono-code text-[12px] text-primary-fixed-dim">CODING COMMUNITY</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TRANSMIT SECTION -->
+<section class="py-20 md:py-24 px-margin-mobile bg-gradient-to-t from-primary-fixed-dim/5 to-transparent" id="transmit">
+<div class="max-w-2xl mx-auto text-center">
+<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-4 animate-slide-down">09 // CONNECTION</h2>
+<h3 class="font-display-lg text-primary mb-8 animate-slide-up">Establish Uplink</h3>
+<form class="space-y-6 text-left animate-fade" style="animation-delay: 0.2s;">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2 group">
+<label class="font-mono-code text-[10px] text-on-surface-variant tracking-widest group-hover:text-primary-fixed-dim transition-colors">IDENTIFIER.NAME</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline focus:border-primary-fixed-dim outline-none py-3 px-4 font-mono-code transition-all focus:ring-1 focus:ring-primary-fixed-dim/20 group-hover:bg-surface-container-high/50" placeholder="GUEST_USER" type="text"/>
+</div>
+<div class="space-y-2 group">
+<label class="font-mono-code text-[10px] text-on-surface-variant tracking-widest group-hover:text-primary-fixed-dim transition-colors">UPLINK.CHANNEL</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline focus:border-primary-fixed-dim outline-none py-3 px-4 font-mono-code transition-all focus:ring-1 focus:ring-primary-fixed-dim/20 group-hover:bg-surface-container-high/50" placeholder="EMAIL@VOID.SYS" type="email"/>
+</div>
+</div>
+<div class="space-y-2 group">
+<label class="font-mono-code text-[10px] text-on-surface-variant tracking-widest group-hover:text-primary-fixed-dim transition-colors">DATA_PACKET.CONTENT</label>
+<textarea class="w-full bg-surface-container-low border-b-2 border-outline focus:border-primary-fixed-dim outline-none py-3 px-4 font-mono-code transition-all focus:ring-1 focus:ring-primary-fixed-dim/20 group-hover:bg-surface-container-high/50" placeholder="INITIALIZE MESSAGE..." rows="5"></textarea>
+</div>
+<button class="w-full bg-primary-container text-on-primary-fixed py-5 font-label-caps text-label-caps tracking-[0.4em] rounded hover:shadow-[0_0_40px_rgba(0,219,231,0.3)] transition-all duration-500 group relative overflow-hidden">
+<span class="relative z-10">INITIATE_CONTACT</span>
+<div class="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-white/10 transition-transform duration-300"></div>
+</button>
+</form>
+</div>
+</section>
+</main>
+<footer class="w-full py-16 md:py-20 border-t border-outline-variant bg-surface flex flex-col items-center gap-unit max-w-container-max mx-auto px-margin-mobile animate-fade">
+<div class="font-display-lg text-primary-fixed-dim text-[42px] mb-6 animate-slide-up">NEURAL_CORE</div>
+<div class="flex gap-8 mb-8">
+<a class="font-mono-code text-mono-code text-on-surface-variant hover:text-primary-fixed-dim hover:-translate-y-1 transition-all duration-300" href="#">GITHUB</a>
+<a class="font-mono-code text-mono-code text-on-surface-variant hover:text-primary-fixed-dim hover:-translate-y-1 transition-all duration-300" href="#">LINKEDIN</a>
+<a class="font-mono-code text-mono-code text-on-surface-variant hover:text-primary-fixed-dim hover:-translate-y-1 transition-all duration-300" href="#">SOURCE</a>
+</div>
+<p class="font-mono-code text-mono-code text-on-surface-variant opacity-50 uppercase tracking-widest">
+        © 2026 NEURAL_CORE. ENGINEERED FOR THE VOID.
+    </p>
+</footer>
+<script>
+    // Three.js removed – no canvas element in DOM
+    let scrollProgress = 0;
+
+    // Custom Cursor Logic
+    const cursor = document.getElementById('custom-cursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, input, textarea').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('cursor-active'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-active'));
+    });
+
+    // Scroll Progress & 3D Integration
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height);
+        
+        scrollProgress = scrolled;
+        document.getElementById('progress-bar').style.width = (scrolled * 100) + "%";
+    });
+
+    // Enhanced scroll reveal animations
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                // Add staggered animation delay for child elements
+                const children = entry.target.querySelectorAll('[class*="animate-"]');
+                children.forEach((child, childIndex) => {
+                    if (!child.style.animationDelay) {
+                        child.style.animationDelay = `${childIndex * 0.1}s`;
+                    }
+                });
+                
+                entry.target.classList.add('animate-fade');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all major sections for smooth scroll reveal
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+    
+    // Add hover lift effect to interactive elements
+    document.querySelectorAll('a, button, .glass-panel').forEach(el => {
+        el.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+    });
+
+    // Typewriter animation for hero name
+    const typedName = document.getElementById('typed-name');
+    if (typedName) {
+        const firstName = 'SHLOK';
+        const lastName = 'KUMAR';
+        const fullText = `${firstName} ${lastName}`;
+        let index = 1;
+
+        const renderTypedName = (count) => {
+            const typed = fullText.slice(0, count);
+            const split = typed.split(' ');
+            const firstPart = split[0] || '';
+            const lastPart = split.slice(1).join(' ');
+            typedName.innerHTML = `${firstPart}<br/><span class="text-primary-fixed-dim">${lastPart}</span><span class="typing-caret"></span>`;
+        };
+
+        typedName.innerHTML = `S<br/><span class="text-primary-fixed-dim"></span><span class="typing-caret"></span>`;
+        const timer = setInterval(() => {
+            index += 1;
+            renderTypedName(index);
+            if (index >= fullText.length) {
+                clearInterval(timer);
+            }
+        }, 140);
+    }
+
+    // Timeline scroll-scrub and parallax
+    const timeline = document.querySelector('.timeline-wrap');
+    const progressEl = document.getElementById('timeline-progress');
+    const items = document.querySelectorAll('.timeline-item');
+    if (timeline && progressEl && items.length) {
+        const stage = timeline.querySelector('.timeline-stage');
+        const pinnedInner = timeline.querySelector('.timeline-pinned-inner');
+        const totalHeight = stage.offsetHeight - window.innerHeight;
+
+        function updateTimeline() {
+            const rect = stage.getBoundingClientRect();
+            const scrolled = Math.min(Math.max((window.innerHeight - rect.top) / (window.innerHeight + rect.height), 0), 1);
+            // Progress bar height
+            const progressMax = (pinnedInner.offsetHeight - 20);
+            progressEl.style.height = `${scrolled * progressMax}px`;
+
+            // For each item, compute its position relative to viewport center and apply in-view classes and parallax
+            items.forEach((it, idx) => {
+                const itRect = it.getBoundingClientRect();
+                const centerDist = Math.abs((itRect.top + itRect.bottom) / 2 - window.innerHeight / 2);
+                const threshold = window.innerHeight / 2;
+                if (centerDist < threshold * 0.8) {
+                    it.classList.add('in-view');
+                }
+                // parallax media
+                const media = it.querySelector('.media img');
+                if (media) {
+                    const move = (window.innerHeight / 2 - (itRect.top + itRect.height / 2)) * 0.06; // small parallax
+                    media.style.transform = `translateY(${move}px) scale(${1 + Math.min(Math.abs(move) / 200, 0.03)})`;
+                }
+            });
+        }
+
+        // Smooth momentum scrolling using requestAnimationFrame interpolation
+        let lastKnownScrollY = window.scrollY;
+        let ticking = false;
+        function onScroll() {
+            lastKnownScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    updateTimeline();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', updateTimeline);
+        // initial
+        updateTimeline();
+    }
+
+    // Replace 3D model with a looping video element; add small scroll-parallax for subtle motion
+    const timelineVideo = document.getElementById('timeline-video');
+    if (timelineVideo) {
+        // Ensure the video will cover the area
+        timelineVideo.style.objectFit = 'cover';
+        timelineVideo.style.width = '100%';
+        timelineVideo.style.height = '100%';
+
+        window.addEventListener('scroll', () => {
+            const rect = timelineVideo.getBoundingClientRect();
+            const centerOffset = (rect.top + rect.height / 2) - (window.innerHeight / 2);
+            // small translate to create parallax effect
+            const translate = Math.max(-40, Math.min(40, -(centerOffset / 20)));
+            timelineVideo.style.transform = `translateY(${translate}px)`;
+        }, { passive: true });
+    }
+
+    // ── Project Carousel Arrow Buttons ──────────────────────────────
+    (function () {
+        const carousel = document.getElementById('project-carousel');
+        const btnPrev  = document.getElementById('carousel-prev');
+        const btnNext  = document.getElementById('carousel-next');
+        if (!carousel || !btnPrev || !btnNext) return;
+
+        function scrollAmount() {
+            // Scroll by the width of the first card + gap (24px)
+            const card = carousel.querySelector('[class*="snap-center"]');
+            return card ? card.offsetWidth + 24 : 320;
+        }
+
+        btnNext.addEventListener('click', () => {
+            carousel.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+        });
+        btnPrev.addEventListener('click', () => {
+            carousel.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+        });
+
+        // Dim/highlight arrows based on scroll position
+        function updateArrows() {
+            btnPrev.style.opacity = carousel.scrollLeft <= 4 ? '0.3' : '1';
+            btnNext.style.opacity =
+                carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 4
+                ? '0.3' : '1';
+        }
+        carousel.addEventListener('scroll', updateArrows, { passive: true });
+        updateArrows();
+    })();
+</script>
+</body></html>
