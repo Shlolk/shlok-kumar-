@@ -41,6 +41,7 @@
   }
 </script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 <link href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@500;600;700;800&amp;family=Geist+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -105,7 +106,7 @@
             100% { background-position: 0% 50%; }
         }
         @keyframes revealText {
-            from { opacity: 0; transform: translateY(14px) scale(0.985); filter: blur(10px); }
+            from { opacity: 0; transform: translateY(18px) scale(0.98); filter: blur(12px); }
             to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
         
@@ -114,6 +115,9 @@
             --font-headline: 'Hanken Grotesk', sans-serif;
             --font-body: 'Inter', sans-serif;
             --font-mono: 'Geist Mono', monospace;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
         }
         body {
             background-color: #060606;
@@ -127,6 +131,34 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: -20% -20% 0 -20%;
+            background:
+                radial-gradient(1300px 700px at 12% 8%, rgba(0, 219, 231, 0.16), transparent 62%),
+                radial-gradient(1000px 700px at 88% 18%, rgba(0, 160, 255, 0.14), transparent 66%),
+                radial-gradient(800px 500px at 50% 92%, rgba(0, 219, 231, 0.12), transparent 72%);
+            filter: blur(16px);
+            z-index: 0;
+            pointer-events: none;
+            animation: gradient-shift 18s ease-in-out infinite;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(rgba(0, 219, 231, 0.18) 1px, transparent 1px),
+                radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 90px 90px, 180px 180px;
+            background-position: 0 0, 30px 40px;
+            opacity: 0.3;
+            mix-blend-mode: screen;
+            animation: float 16s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
         .font-display-2xl,
         .font-display-lg {
             font-family: var(--font-display);
@@ -134,7 +166,7 @@
             text-wrap: balance;
         }
         .font-display-2xl {
-            font-size: clamp(4rem, 10vw, 9rem);
+            font-size: clamp(4.6rem, 11vw, 10rem);
             line-height: 0.88;
             text-transform: uppercase;
             color: #f8fbfc;
@@ -181,7 +213,7 @@
             -webkit-text-fill-color: initial;
         }
         .font-display-lg {
-            font-size: clamp(2rem, 3.2vw, 3.5rem);
+            font-size: clamp(2.4rem, 3.8vw, 4rem);
             line-height: 0.96;
             color: #f6f8fa;
             text-shadow: 0 0 8px rgba(0, 219, 231, 0.05);
@@ -191,6 +223,7 @@
             font-weight: 600;
             letter-spacing: -0.025em;
             text-wrap: balance;
+            font-size: clamp(1.5rem, 2.2vw, 2.4rem);
         }
         .font-body-lg,
         .font-body-sm,
@@ -226,12 +259,12 @@
         }
         .text-reveal {
             opacity: 0;
-            animation: revealText 0.9s ease forwards;
+            animation: revealText 1.1s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
         }
         .text-reveal-delayed { animation-delay: 0.18s; }
         .text-reveal-late { animation-delay: 0.34s; }
         .text-focus {
-            transition: transform 0.35s ease, text-shadow 0.35s ease, color 0.35s ease;
+            transition: transform 0.45s ease, text-shadow 0.45s ease, color 0.45s ease;
         }
         .text-focus:hover {
             transform: translateY(-2px);
@@ -242,7 +275,7 @@
             position: relative;
         }
         .skill-chip-icon {
-            transition: transform 0.35s ease, filter 0.35s ease;
+            transition: transform 0.45s ease, filter 0.45s ease;
         }
         .skill-tooltip {
             position: absolute;
@@ -261,7 +294,7 @@
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.25s ease;
+            transition: opacity 0.35s ease, transform 0.35s ease;
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
             z-index: 20;
         }
@@ -279,10 +312,10 @@
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
         .pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
-        .animate-slide-up { animation: slideInUp 0.6s ease-out; }
-        .animate-slide-down { animation: slideInDown 0.6s ease-out; }
-        .animate-fade { animation: fadeIn 0.6s ease-out; }
-        .animate-scale { animation: scaleIn 0.5s ease-out; }
+        .animate-slide-up { animation: slideInUp 0.85s cubic-bezier(0.2, 0.75, 0.2, 1); }
+        .animate-slide-down { animation: slideInDown 0.85s cubic-bezier(0.2, 0.75, 0.2, 1); }
+        .animate-fade { animation: fadeIn 0.9s ease-out; }
+        .animate-scale { animation: scaleIn 0.7s cubic-bezier(0.2, 0.75, 0.2, 1); }
         .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
         .typing-caret {
             display: inline-block;
@@ -298,9 +331,9 @@
             background: rgba(14, 14, 14, 0.5);
             backdrop-filter: blur(22px) saturate(160%);
             border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: inset 0 0 16px rgba(0, 219, 231, 0.04);
+            box-shadow: inset 0 0 22px rgba(0, 219, 231, 0.08), 0 20px 50px rgba(0, 0, 0, 0.35);
             position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.55s cubic-bezier(0.2, 0.75, 0.2, 1);
         }
         .glass-panel::before {
             content: "";
@@ -317,41 +350,41 @@
         }
 
         .neon-border-glow {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.55s cubic-bezier(0.2, 0.75, 0.2, 1);
         }
 
         .neon-border-glow:hover {
-            box-shadow: 0 0 40px rgba(0, 219, 231, 0.4), inset 0 0 20px rgba(0, 219, 231, 0.15);
+            box-shadow: 0 0 60px rgba(0, 219, 231, 0.55), inset 0 0 28px rgba(0, 219, 231, 0.2);
             border-color: rgba(0, 219, 231, 0.6);
             transform: translateY(-6px);
         }
         
         .glass-panel:hover {
-            background: rgba(18, 18, 18, 0.56);
-            border-color: rgba(0, 219, 231, 0.16);
-            box-shadow: 0 0 22px rgba(0, 219, 231, 0.16), inset 0 0 22px rgba(0, 219, 231, 0.06);
+            background: rgba(18, 18, 18, 0.62);
+            border-color: rgba(0, 219, 231, 0.22);
+            box-shadow: 0 0 32px rgba(0, 219, 231, 0.24), inset 0 0 28px rgba(0, 219, 231, 0.1);
         }
         
         a {
-            transition: all 0.3s ease;
+            transition: all 0.45s ease;
         }
         
         button {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.45s cubic-bezier(0.2, 0.75, 0.2, 1);
         }
         
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 219, 231, 0.16);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 36px rgba(0, 219, 231, 0.28);
         }
         
         input, textarea {
-            transition: all 0.3s ease;
+            transition: all 0.45s ease;
         }
         
         input:focus, textarea:focus {
-            background: rgba(30, 30, 30, 0.6);
-            box-shadow: 0 0 20px rgba(0, 219, 231, 0.1);
+            background: rgba(30, 30, 30, 0.65);
+            box-shadow: 0 0 28px rgba(0, 219, 231, 0.2);
         }
         
         /* Stagger animations for lists */
@@ -390,32 +423,179 @@
         }
         /* duplicate body block removed */
         #custom-cursor {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #00dbe7;
-            border-radius: 50%;
+            width: 26px;
+            height: 26px;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            transition: transform 0.1s ease-out, width 0.3s, height 0.3s, border-color 0.3s;
+            transform: translate3d(-50%, -50%, 0);
+            transition: transform 0.2s ease;
+        }
+        #custom-cursor::before,
+        #custom-cursor::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 219, 231, 0.85);
+            box-shadow: 0 0 14px rgba(0, 219, 231, 0.4);
+        }
+        #custom-cursor::after {
+            inset: -8px;
+            opacity: 0.5;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        #custom-cursor span {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 2px;
+            height: 18px;
+            background: rgba(0, 219, 231, 0.85);
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px rgba(0, 219, 231, 0.3);
+            box-shadow: 0 0 10px rgba(0, 219, 231, 0.45);
+        }
+        #custom-cursor span:last-child {
+            width: 18px;
+            height: 2px;
         }
         .cursor-active {
-            width: 50px;
-            height: 50px;
-            background: rgba(0, 219, 231, 0.1);
-            backdrop-filter: invert(0.1);
-            border-color: #00dbe7;
-            box-shadow: 0 0 20px rgba(0, 219, 231, 0.5);
+            transform: translate3d(-50%, -50%, 0) scale(1.2);
         }
         .noise-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.04;
+            opacity: 0.06;
             pointer-events: none;
             z-index: 50;
+        }
+        .nav-pill {
+            position: relative;
+            backdrop-filter: blur(22px) saturate(160%);
+            background: linear-gradient(180deg, rgba(20, 20, 20, 0.72), rgba(8, 8, 8, 0.38));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+        .nav-pill::before {
+            content: "";
+            position: absolute;
+            inset: 1px 1px auto 1px;
+            height: 40%;
+            border-radius: inherit;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 70%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .nav-pill::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(120deg, rgba(0, 219, 231, 0.55), rgba(255, 255, 255, 0.12), rgba(0, 219, 231, 0.25));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            opacity: 0.6;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+        }
+        .nav-pill:hover::after {
+            opacity: 1;
+        }
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            transition: transform 0.5s ease, color 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 219, 231, 0.25), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: -1;
+        }
+        .nav-link:hover {
+            transform: translateY(-3px) scale(1.05);
+            color: #ffffff;
+            box-shadow: 0 0 28px rgba(0, 219, 231, 0.32);
+        }
+        .nav-link:hover::after {
+            opacity: 1;
+        }
+        .nav-link.is-active {
+            color: #ffffff;
+            background: rgba(0, 219, 231, 0.16);
+            box-shadow: 0 0 36px rgba(0, 219, 231, 0.5);
+        }
+        .stack-controls {
+            display: none;
+        }
+        .border-glow-card {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            --edge-proximity: 0;
+            --cursor-angle: 180deg;
+            --glow-color: rgba(0, 219, 231, 0.55);
+            --glow-color-soft: rgba(0, 219, 231, 0.25);
+            --glow-padding: 32px;
+            --cone-spread: 28deg;
+        }
+        .border-glow-card::before {
+            content: "";
+            position: absolute;
+            inset: calc(-1 * var(--glow-padding));
+            background:
+                conic-gradient(from var(--cursor-angle),
+                    transparent 0deg,
+                    var(--glow-color) var(--cone-spread),
+                    transparent calc(var(--cone-spread) * 2));
+            opacity: calc(var(--edge-proximity) / 100);
+            filter: blur(18px);
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .border-glow-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(0, 219, 231, 0.35), rgba(255, 255, 255, 0.08));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            opacity: calc(0.25 + (var(--edge-proximity) / 200));
+            pointer-events: none;
+            z-index: 1;
+        }
+        .border-glow-inner {
+            position: relative;
+            z-index: 2;
+        }
+        .split-text {
+            display: inline-block;
+            overflow: hidden;
+        }
+        .split-char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: transform 0.38s cubic-bezier(0.2, 0.75, 0.2, 1), opacity 0.38s cubic-bezier(0.2, 0.75, 0.2, 1);
+            will-change: transform, opacity;
+        }
+        .split-text.is-revealed .split-char {
+            opacity: 1;
+            transform: translateY(0);
         }
         .scroll-progress {
             position: fixed;
@@ -429,6 +609,65 @@
         /* Hide scrollbar on carousel rail (all browsers) */
         .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Scroll stack styles (projects) */
+        .scroll-stack-scroller {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: visible;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: scroll-position;
+        }
+        .scroll-stack-scroller.stack-window {
+            height: auto;
+            overflow: visible;
+        }
+        .scroll-stack-inner {
+            padding: 20vh 5rem 50rem;
+            min-height: 100vh;
+        }
+        .scroll-stack-card-wrapper {
+            position: relative;
+        }
+        .scroll-stack-card {
+            transform-origin: top center;
+            will-change: transform, filter;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            width: min(100%, 760px);
+            margin: 30px auto;
+            padding: 3rem;
+            border-radius: 40px;
+            box-sizing: border-box;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            position: relative;
+        }
+        .scroll-stack-end {
+            width: 100%;
+            height: 1px;
+        }
+        @media (max-width: 900px) {
+            .scroll-stack-inner {
+                padding: 16vh 2rem 32rem;
+            }
+            .scroll-stack-card {
+                padding: 2rem;
+                border-radius: 28px;
+            }
+        }
+        @media (max-width: 640px) {
+            .scroll-stack-inner {
+                padding: 12vh 1.25rem 26rem;
+            }
+        }
 
         /* Timeline styles */
         .timeline-wrap { position: relative; }
@@ -477,6 +716,27 @@
         .timeline-card { width: 100%; max-width: 420px; z-index: 8; }
         .timeline-card h4 { line-height: 1.15; letter-spacing: -0.02em; }
         .timeline-card p { line-height: 1.75; overflow-wrap: anywhere; }
+
+        @media (max-width: 1200px) {
+            .timeline-item {
+                grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr);
+            }
+            .timeline-item .card-wrap {
+                width: min(100%, 360px);
+            }
+            .timeline-item .media {
+                width: 240px;
+                height: 150px;
+            }
+            .timeline-item.left .card-wrap { padding-right: 28px; }
+            .timeline-item.right .card-wrap { padding-left: 28px; }
+        }
+        @media (max-width: 1024px) {
+            .timeline-item .media {
+                width: 220px;
+                height: 140px;
+            }
+        }
         /* Pinned container to allow scrub-like effect */
         /* Reduced height to tighten space below the timeline */
         /* timeline stage grows to fit its content, no artificial clipping */
@@ -484,62 +744,123 @@
         .timeline-pinned-inner { position: relative; top: 0; }
         @media (max-width: 900px) {
             .timeline-line, .timeline-progress { left: 20px; transform: none; }
-            .timeline-item { display: flex; flex-direction: column; margin: 88px 0; gap: 20px; }
+            .timeline-item { display: flex; flex-direction: column; margin: 88px 0; gap: 20px; padding-left: 2.25rem; }
             .timeline-card { width: 100%; max-width: none; }
             .timeline-item.left, .timeline-item.right { justify-content: center; }
-            .timeline-item .timeline-dot { grid-column: auto; align-self: auto; justify-self: auto; margin-top: 0; left: 20px; transform: none; position: relative; }
+            .timeline-item .card-wrap,
+            .timeline-item.left .card-wrap,
+            .timeline-item.right .card-wrap {
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+                text-align: left;
+            }
+            .timeline-item .media {
+                width: 100%;
+                max-width: 100%;
+                height: 200px;
+            }
+            .timeline-item .timeline-dot {
+                grid-column: auto;
+                align-self: auto;
+                justify-self: auto;
+                margin-top: 0;
+                margin-left: -2.25rem;
+                left: 20px;
+                transform: none;
+                position: relative;
+            }
             .timeline-pinned-inner { top: 40px; height: calc(100vh - 80px); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+            #custom-cursor {
+                display: none;
+            }
+        }
+        @media (max-width: 640px) {
+            .hero-copy {
+                max-width: 28ch;
+            }
+        }
+        @media (max-width: 480px) {
+            .font-display-2xl {
+                font-size: clamp(2.6rem, 12.5vw, 3.4rem);
+                line-height: 0.95;
+            }
+            .font-display-lg {
+                font-size: clamp(1.9rem, 8vw, 2.6rem);
+            }
+            .timeline-item {
+                padding-left: 1.5rem;
+            }
+            .timeline-line, .timeline-progress {
+                left: 14px;
+            }
+            .timeline-item .timeline-dot {
+                margin-left: -1.5rem;
+            }
         }
     </style>
 </head>
 <body class="font-body-lg selection:bg-primary-fixed-dim selection:text-on-primary-fixed">
-<div id="custom-cursor"></div>
+<div id="custom-cursor">
+    <span></span>
+    <span></span>
+</div>
 <div class="scroll-progress" id="progress-bar"></div>
 <div class="noise-overlay"></div>
 <!-- Ambient Lighting Blobs -->
 <div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-fixed-dim/10 rounded-full blur-[120px] pulse-glow pointer-events-none"></div>
 <div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary-fixed-dim/5 rounded-full blur-[120px] pulse-glow pointer-events-none" style="animation-delay: -2s;"></div>
 <!-- TopNavBar -->
-<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-container-max rounded-full border border-white/10 bg-surface/10 backdrop-blur-xl shadow-2xl z-50 flex justify-between items-center px-gutter py-3">
-<div class="font-display-lg text-primary-fixed-dim tracking-tighter text-[24px]">NEURAL_CORE</div>
+<nav class="nav-pill fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[calc(100%-1.25rem)] sm:w-[92%] max-w-container-max rounded-full z-50 flex flex-wrap justify-between items-center px-4 sm:px-6 md:px-gutter py-2.5 md:py-3 gap-2 transition-all duration-500 hover:shadow-[0_0_40px_rgba(0,219,231,0.35)]">
+<div class="font-display-lg text-primary-fixed-dim tracking-tighter text-[16px] sm:text-[22px] leading-none shrink-0">NEURAL_CORE</div>
 <div class="hidden md:flex gap-6 items-center">
-<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#stations">SKILLS</a>
-<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#streams">PROJECTS</a>
-<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#synopsis">HIGHLIGHTS</a>
-<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#chronicle">TIMELINE</a>
-<a class="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="#transmit">CONTACT</a>
+<a class="nav-link font-label-caps text-label-caps tracking-widest text-on-surface-variant" href="#stations">SKILLS</a>
+<a class="nav-link font-label-caps text-label-caps tracking-widest text-on-surface-variant" href="#streams">PROJECTS</a>
+<a class="nav-link font-label-caps text-label-caps tracking-widest text-on-surface-variant" href="#synopsis">HIGHLIGHTS</a>
+<a class="nav-link font-label-caps text-label-caps tracking-widest text-on-surface-variant" href="#chronicle">TIMELINE</a>
+<a class="nav-link font-label-caps text-label-caps tracking-widest text-on-surface-variant" href="#transmit">CONTACT</a>
 </div>
-<button class="bg-primary-container text-on-primary-fixed px-6 py-2 rounded-full font-label-caps text-label-caps tracking-widest hover:scale-105 transition-transform duration-200">
+<button class="magnetic hidden sm:inline-flex bg-primary-container text-on-primary-fixed px-4 md:px-6 py-2 rounded-full font-label-caps text-label-caps tracking-[0.2em] md:tracking-widest hover:scale-105 transition-transform duration-200">
         RESUME.SYS
     </button>
 </nav>
 <main>
 <!-- HERO SECTION -->
-<section class="min-h-screen flex flex-col items-center justify-center relative px-margin-mobile md:px-margin-desktop overflow-hidden bg-black pt-32 md:pt-40">
-<video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover" src="From KlickPin CF 🪴 Save this clever new year goals roundup to make your next project easier and prettier designed to feel inspiring useful and easy to save and - Pin-563018696668062.mp4"></video>
+<section class="min-h-screen pt-36 md:pt-44 flex flex-col items-center justify-center relative px-margin-mobile md:px-margin-desktop overflow-hidden bg-black">
+<video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover object-center" src="From KlickPin CF 🪴 Save this clever new year goals roundup to make your next project easier and prettier designed to feel inspiring useful and easy to save and - Pin-563018696668062.mp4"></video>
 <div class="absolute inset-0 bg-black/55"></div>
-<div class="relative z-10 text-center">
-<div class="mt-16 md:mt-20 mb-6 inline-block animate-float">
-<div class="w-52 h-52 md:w-72 md:h-72 rounded-full border-2 border-primary-fixed-dim/60 p-2 relative glass-panel animate-glow-pulse">
+<div class="relative z-10 w-full max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row md:items-center md:justify-center gap-10 md:gap-14 text-center md:text-left">
+<div class="mt-8 md:mt-12 mb-2 md:mb-0 inline-flex justify-center md:justify-center animate-float">
+<div class="w-36 h-36 sm:w-44 sm:h-44 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full border-2 border-primary-fixed-dim/60 p-2 relative glass-panel animate-glow-pulse">
 <div class="absolute inset-0 bg-primary-fixed-dim/30 rounded-full blur-2xl"></div>
 <img class="w-full h-full object-cover rounded-full" alt="Lead Architect" src="image.png"/>
 </div>
 </div>
-<h1 class="font-display-2xl md:text-[140px] leading-none mb-4 tracking-tighter pointer-events-none animate-slide-down" id="typed-name" aria-label="SHLOK KUMAR">
+<div class="flex-1 max-w-[680px]">
+<h1 class="font-display-2xl text-[2.7rem] sm:text-[3.5rem] md:text-[140px] leading-[0.9] mb-5 tracking-tighter pointer-events-none animate-slide-down" id="typed-name" aria-label="SHLOK KUMAR">
                 SHLOK <br/> <span class="text-primary-fixed-dim">KUMAR</span>
             </h1>
-<p class="font-body-lg hero-copy text-white max-w-2xl mx-auto mb-8 tracking-wide backdrop-blur-sm px-4 py-2 rounded-lg bg-black/40 animate-fade text-focus">
+<p class="font-body-lg hero-copy text-white max-w-[46ch] md:ml-0 mx-auto md:mx-0 mb-8 tracking-wide backdrop-blur-sm px-5 py-3 rounded-lg bg-black/40 animate-fade text-focus">
                 Backend developer crafting scalable applications. Passionate about solving real-world problems through code.
             </p>
-<div class="flex flex-col md:flex-row gap-4 justify-center items-center relative z-20 animate-slide-up">
-<a class="bg-primary-fixed-dim text-on-primary-fixed px-10 py-4 font-label-caps text-label-caps tracking-widest rounded-lg hover:shadow-[0_0_30px_rgba(0,219,231,0.5)] transition-all duration-300" href="#introduction">
+<div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center md:items-start relative z-20 animate-slide-up">
+<a class="magnetic bg-primary-fixed-dim text-on-primary-fixed px-10 py-4 font-label-caps text-label-caps tracking-widest rounded-lg hover:shadow-[0_0_30px_rgba(0,219,231,0.5)] transition-all duration-300" href="#introduction">
                     EXPLORE ME
                 </a>
 </div>
 </div>
+</div>
+</div>
 <!-- Scroll Indicator -->
 <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 z-10">
-<span class="font-mono-code text-[10px] tracking-[0.4em] text-primary-fixed-dim">SCROLL_DOWN</span>
+
 <div class="w-[1px] h-12 bg-gradient-to-b from-primary-fixed-dim to-transparent"></div>
 </div>
 </section>
@@ -547,15 +868,15 @@
 <section id="introduction" class="py-20 md:py-24 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
 <div class="grid md:grid-cols-12 gap-8 items-center">
 <div class="md:col-span-7">
-<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-6 animate-slide-down">01 // INTRODUCTION</h2>
-<h3 class="font-display-lg text-cinematic mb-6 leading-tight animate-slide-up">Building Scalable Backends with Clean, Reliable Code</h3>
+<h2 class="font-display-lg text-primary mb-6 leading-tight uppercase tracking-[0.14em] animate-slide-down">01 // INTRODUCTION</h2>
+<h3 class="font-display-lg text-white mb-6 leading-tight animate-slide-up">Building Scalable Backends with Clean, Reliable Code</h3>
 <div class="space-y-4 font-body-lg text-on-surface-variant leading-relaxed max-w-2xl md:ml-8 animate-fade" style="animation-delay: 0.2s;">
 <p>Passionate about building impactful products, participating in hackathons, and developing practical software solutions. I specialize in backend development with expertise in Flask, FastAPI, Node.js, and modern databases.</p>
 <p>I focus on crafting scalable APIs, robust authentication systems, and real-time features that solve real-world problems. When coding, I care about performance first, then maintainability, then the elegant details that make great software.</p>
 </div>
 </div>
 <div class="md:col-span-5 flex justify-center">
-<div class="glass-panel rounded-full relative overflow-hidden flex items-center justify-center w-80 h-80 md:w-96 md:h-96">
+<div class="glass-panel rounded-full relative overflow-hidden flex items-center justify-center w-64 h-64 sm:w-72 sm:h-72 md:w-96 md:h-96">
 <div class="absolute inset-0 bg-gradient-to-br from-primary-fixed-dim/10 via-transparent to-transparent"></div>
 <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,219,231,0.14),transparent_55%)]"></div>
 <img alt="Portrait of the creator" class="w-full h-full object-cover drop-shadow-[0_0_30px_rgba(0,219,231,0.18)]" src="image_2026-05-19_141404357-removebg-preview.png"/>
@@ -570,7 +891,7 @@
 <h2 class="font-display-lg text-primary mb-6 leading-tight uppercase tracking-[0.14em] animate-slide-down">02 // TECHNICAL SKILLS</h2>
 <div class="mt-6 glass-panel p-5 rounded-xl animate-scale">
 <h3 class="font-mono-code text-primary-fixed-dim mb-4 text-sm tracking-widest">CORE_COMPETENCIES</h3>
-<div class="grid grid-cols-4 sm:grid-cols-4 gap-3">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
 <div class="skill-chip group flex items-center justify-center h-16 rounded-full border border-white/10 bg-white/5 hover:border-primary-fixed-dim hover:bg-primary-fixed-dim/10 transition-all duration-300 animate-slide-up" style="animation-delay: 0s;" aria-label="Python">
 <i class="skill-chip-icon devicon-python-plain colored text-[30px]"></i>
 <span class="skill-tooltip">Python</span>
@@ -627,10 +948,10 @@
 <!-- SKILLS_MATRIX SECTION -->
 <section class="py-20 md:py-24 bg-surface-container-lowest">
 <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-10 text-center animate-slide-down">03 // CAPABILITIES</h2>
+<h2 class="font-display-lg text-primary mb-10 leading-tight uppercase tracking-[0.14em] text-center animate-slide-down">03 // CAPABILITIES</h2>
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 <!-- Card 1 -->
-<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0s;">
+<div class="glass-panel border-glow-card p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0s;">
 <span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">psychology</span>
 <h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">AI / ML</h3>
 <p class="font-body-sm text-on-surface-variant">Engineering LLM pipelines and generative model integrations for real-time creativity.</p>
@@ -640,7 +961,7 @@
 </div>
 </div>
 <!-- Card 2 -->
-<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.1s;">
+<div class="glass-panel border-glow-card p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.1s;">
 <span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">deployed_code</span>
 <h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">WEBGL</h3>
 <p class="font-body-sm text-on-surface-variant">High-performance 3D rendering and shader programming for the modern browser.</p>
@@ -650,7 +971,7 @@
 </div>
 </div>
 <!-- Card 3 -->
-<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.2s;">
+<div class="glass-panel border-glow-card p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.2s;">
 <span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">settings_input_component</span>
 <h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">INTERFACE</h3>
 <p class="font-body-sm text-on-surface-variant">Architecting intuitive, low-latency interfaces for high-stakes enterprise software.</p>
@@ -660,7 +981,7 @@
 </div>
 </div>
 <!-- Card 4 -->
-<div class="glass-panel p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.3s;">
+<div class="glass-panel border-glow-card p-6 rounded-xl neon-border-glow transition-all duration-500 group animate-scale" style="animation-delay: 0.3s;">
 <span class="material-symbols-outlined text-primary-fixed-dim mb-4 text-[36px] group-hover:animate-float">hub</span>
 <h3 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">FULL-STACK</h3>
 <p class="font-body-sm text-on-surface-variant">End-to-end deployment of scalable cloud infrastructure and edge computing nodes.</p>
@@ -676,21 +997,22 @@
 <section class="py-20 md:py-24 overflow-hidden" id="streams">
 <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-8 flex justify-between items-end">
 <div>
-<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-4 animate-slide-down">04 // ARTIFACTS</h2>
+<h2 class="font-display-lg text-primary mb-4 leading-tight uppercase tracking-[0.14em] animate-slide-down">04 // ARTIFACTS</h2>
 <h3 class="font-display-lg text-primary animate-slide-up">Featured Projects</h3>
 </div>
-<div class="hidden md:flex gap-4">
-<button id="carousel-prev" aria-label="Previous project" class="p-4 border border-white/10 rounded-full hover:bg-white/5 transition-colors">
+<div class="hidden md:flex gap-4 stack-controls">
+<button id="carousel-prev" aria-label="Previous project" class="magnetic p-4 border border-white/10 rounded-full hover:bg-white/5 transition-colors">
 <span class="material-symbols-outlined">arrow_back</span>
 </button>
-<button id="carousel-next" aria-label="Next project" class="p-4 border border-white/10 rounded-full hover:bg-white/5 transition-colors">
+<button id="carousel-next" aria-label="Next project" class="magnetic p-4 border border-white/10 rounded-full hover:bg-white/5 transition-colors">
 <span class="material-symbols-outlined">arrow_forward</span>
 </button>
 </div>
 </div>
-<div id="project-carousel" class="flex gap-6 px-margin-mobile md:px-margin-desktop overflow-x-auto pb-10 snap-x no-scrollbar" style="scroll-behavior:smooth;">
+<div class="scroll-stack-scroller stack-window" id="project-stack">
+<div class="scroll-stack-inner">
 <!-- Project 1: TezMechanix -->
-<div class="min-w-[320px] md:min-w-[600px] snap-center group animate-scale">
+<div class="scroll-stack-card glass-panel group animate-scale">
 <div class="relative h-[340px] mb-5 overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-primary-fixed-dim/20 to-transparent flex items-center justify-center transition-all duration-500">
 <span class="material-symbols-outlined text-primary-fixed-dim text-[80px] opacity-50 group-hover:opacity-80 transition-opacity">build</span>
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
@@ -703,7 +1025,7 @@
 <a class="font-label-caps text-[10px] tracking-widest text-primary-fixed-dim hover:underline" href="https://github.com" target="_blank">VIEW_ON_GITHUB</a>
 </div>
 <!-- Project 2: Civic Rights AI -->
-<div class="min-w-[320px] md:min-w-[600px] snap-center group animate-scale" style="animation-delay: 0.15s;">
+<div class="scroll-stack-card glass-panel group animate-scale" style="animation-delay: 0.15s;">
 <div class="relative h-[340px] mb-5 overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-primary-fixed-dim/20 to-transparent flex items-center justify-center transition-all duration-500">
 <span class="material-symbols-outlined text-primary-fixed-dim text-[80px] opacity-50 group-hover:opacity-80 transition-opacity">smart_toy</span>
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
@@ -715,13 +1037,15 @@
 <p class="font-body-sm text-on-surface-variant mb-4">An AI-powered platform for analyzing citizen complaints using NLP. Identifies constitutional rights and provides step-by-step civic guidance built with FastAPI, React, and MongoDB.</p>
 <a class="font-label-caps text-[10px] tracking-widest text-primary-fixed-dim hover:underline" href="https://github.com" target="_blank">VIEW_ON_GITHUB</a>
 </div>
+<div class="scroll-stack-end"></div>
+</div>
 </div>
 </section>
 <!-- CHRONICLE SECTION -->
 <section class="py-20 md:py-24 max-w-7xl mx-auto px-margin-mobile" id="chronicle">
     <div class="timeline-wrap">
         <div class="timeline-container">
-            <h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-6 text-center">05 // TIMELINE</h2>
+            <h2 class="font-display-lg text-primary mb-6 leading-tight uppercase tracking-[0.14em] text-center">05 // TIMELINE</h2>
             <div class="timeline-stage">
                 <div class="timeline-pinned">
                     <div class="timeline-pinned-inner">
@@ -740,7 +1064,7 @@
                             </div>
                             <!-- Item 2 -->
                             <div class="timeline-item right" data-index="1">
-                                <div class="media"><img src="https://images.unsplash.com/photo-1506765515384-028b60a970df?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=def" alt="project"/></div>
+                                <div class="media"><img src="cbncc.png" alt="project"/></div>
                                 <div class="timeline-dot"></div>
                                 <div class="card-wrap timeline-card card-anim">
                                     <h4 class="font-headline-md text-primary mb-2">Founder — CBNCC</h4>
@@ -777,24 +1101,24 @@
 </section>
 <!-- ACHIEVEMENTS SECTION -->
 <section class="py-20 md:py-24 max-w-container-max mx-auto px-margin-mobile">
-<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-6 animate-slide-down">07 // ACHIEVEMENTS</h2>
+<h2 class="font-display-lg text-primary mb-6 leading-tight uppercase tracking-[0.14em] animate-slide-down">07 // ACHIEVEMENTS</h2>
 <div class="grid md:grid-cols-2 gap-4">
-<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0s;">
+<div class="glass-panel border-glow-card p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0s;">
 <h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">HACK4DELHI</h4>
 <p class="font-mono-code text-primary-fixed-dim text-sm mb-3">National Hackathon • Finalist</p>
 <p class="font-body-sm text-on-surface-variant">Finalist in the Hack4Delhi National Hackathon, showcasing innovative backend solutions.</p>
 </div>
-<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.1s;">
+<div class="glass-panel border-glow-card p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.1s;">
 <h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">HACK FOR BHARAT</h4>
 <p class="font-mono-code text-primary-fixed-dim text-sm mb-3">Microsoft • Participant</p>
 <p class="font-body-sm text-on-surface-variant">Participant in Microsoft's Hack for Bharat hackathon at Noida.</p>
 </div>
-<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.2s;">
+<div class="glass-panel border-glow-card p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.2s;">
 <h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">IIT KHARAGPUR HACKATHON</h4>
 <p class="font-mono-code text-primary-fixed-dim text-sm mb-3">National Level • Participant</p>
 <p class="font-body-sm text-on-surface-variant">Competed at India's premier tech hackathon in Kharagpur.</p>
 </div>
-<div class="glass-panel p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.3s;">
+<div class="glass-panel border-glow-card p-5 rounded-xl border-l-2 border-primary-fixed-dim animate-scale" style="animation-delay: 0.3s;">
 <h4 class="font-headline-md text-primary mb-2 group-hover:text-primary-fixed-dim transition-colors">SMART INDIA HACKATHON</h4>
 <p class="font-mono-code text-primary-fixed-dim text-sm mb-3">Internal • Shortlisted</p>
 <p class="font-body-sm text-on-surface-variant">Shortlisted for Smart India Hackathon at Netaji Subhas University.</p>
@@ -804,9 +1128,9 @@
 <!-- SYNOPSIS SECTION -->
 <section class="py-20 md:py-24 px-margin-mobile" id="synopsis">
 <div class="max-w-container-max mx-auto">
-<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-10 text-center">08 // HIGHLIGHTS</h2>
+<h2 class="font-display-lg text-primary mb-10 leading-tight uppercase tracking-[0.14em] text-center">08 // HIGHLIGHTS</h2>
 <div class="grid md:grid-cols-3 gap-6">
-<div class="glass-panel p-8 rounded-xl relative">
+<div class="glass-panel border-glow-card p-8 rounded-xl relative">
 <span class="material-symbols-outlined absolute top-5 right-5 text-primary-fixed-dim/20 text-[52px]">code</span>
 <p class="font-body-lg text-primary mb-6 leading-relaxed">"Strong backend fundamentals and ability to build scalable systems. Great addition to any technical team."</p>
 <div class="flex items-center gap-4">
@@ -819,7 +1143,7 @@
 </div>
 </div>
 </div>
-<div class="glass-panel p-8 rounded-xl relative">
+<div class="glass-panel border-glow-card p-8 rounded-xl relative">
 <span class="material-symbols-outlined absolute top-5 right-5 text-primary-fixed-dim/20 text-[52px]">auto_awesome</span>
 <p class="font-body-lg text-primary mb-6 leading-relaxed">"Problem solver with deep focus on backend architecture and API design. Builds production-ready systems."</p>
 <div class="flex items-center gap-4">
@@ -832,7 +1156,7 @@
 </div>
 </div>
 </div>
-<div class="glass-panel p-8 rounded-xl relative">
+<div class="glass-panel border-glow-card p-8 rounded-xl relative">
 <span class="material-symbols-outlined absolute top-5 right-5 text-primary-fixed-dim/20 text-[52px]">trending_up</span>
 <p class="font-body-lg text-primary mb-6 leading-relaxed">"Passionate about building products that solve real problems. Excellent problem-solving and coding skills."</p>
 <div class="flex items-center gap-4">
@@ -850,10 +1174,10 @@
 <!-- TRANSMIT SECTION -->
 <section class="py-20 md:py-24 px-margin-mobile bg-gradient-to-t from-primary-fixed-dim/5 to-transparent" id="transmit">
 <div class="max-w-2xl mx-auto text-center">
-<h2 class="font-label-caps text-label-caps text-primary-fixed-dim mb-4 animate-slide-down">09 // CONNECTION</h2>
+<h2 class="font-display-lg text-primary mb-4 leading-tight uppercase tracking-[0.14em] animate-slide-down">09 // CONNECTION</h2>
 <h3 class="font-display-lg text-primary mb-8 animate-slide-up">Establish Uplink</h3>
 <form class="space-y-6 text-left animate-fade" style="animation-delay: 0.2s;">
-<div class="grid grid-cols-2 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 <div class="space-y-2 group">
 <label class="font-mono-code text-[10px] text-on-surface-variant tracking-widest group-hover:text-primary-fixed-dim transition-colors">IDENTIFIER.NAME</label>
 <input class="w-full bg-surface-container-low border-b-2 border-outline focus:border-primary-fixed-dim outline-none py-3 px-4 font-mono-code transition-all focus:ring-1 focus:ring-primary-fixed-dim/20 group-hover:bg-surface-container-high/50" placeholder="GUEST_USER" type="text"/>
@@ -867,7 +1191,7 @@
 <label class="font-mono-code text-[10px] text-on-surface-variant tracking-widest group-hover:text-primary-fixed-dim transition-colors">DATA_PACKET.CONTENT</label>
 <textarea class="w-full bg-surface-container-low border-b-2 border-outline focus:border-primary-fixed-dim outline-none py-3 px-4 font-mono-code transition-all focus:ring-1 focus:ring-primary-fixed-dim/20 group-hover:bg-surface-container-high/50" placeholder="INITIALIZE MESSAGE..." rows="5"></textarea>
 </div>
-<button class="w-full bg-primary-container text-on-primary-fixed py-5 font-label-caps text-label-caps tracking-[0.4em] rounded hover:shadow-[0_0_40px_rgba(0,219,231,0.3)] transition-all duration-500 group relative overflow-hidden">
+<button class="magnetic w-full bg-primary-container text-on-primary-fixed py-5 font-label-caps text-label-caps tracking-[0.4em] rounded hover:shadow-[0_0_40px_rgba(0,219,231,0.3)] transition-all duration-500 group relative overflow-hidden">
 <span class="relative z-10">INITIATE_CONTACT</span>
 <div class="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-white/10 transition-transform duration-300"></div>
 </button>
@@ -875,9 +1199,9 @@
 </div>
 </section>
 </main>
-<footer class="w-full py-16 md:py-20 border-t border-outline-variant bg-surface flex flex-col items-center gap-unit max-w-container-max mx-auto px-margin-mobile animate-fade">
-<div class="font-display-lg text-primary-fixed-dim text-[42px] mb-6 animate-slide-up">NEURAL_CORE</div>
-<div class="flex gap-8 mb-8">
+<footer class="w-full py-16 md:py-20 border-t border-outline-variant bg-surface flex flex-col items-center gap-unit max-w-container-max mx-auto px-margin-mobile animate-fade text-center">
+<div class="font-display-lg text-primary-fixed-dim text-[30px] sm:text-[42px] mb-6 animate-slide-up">NEURAL_CORE</div>
+<div class="flex flex-wrap justify-center gap-5 sm:gap-8 mb-8">
 <a class="font-mono-code text-mono-code text-on-surface-variant hover:text-primary-fixed-dim hover:-translate-y-1 transition-all duration-300" href="#">GITHUB</a>
 <a class="font-mono-code text-mono-code text-on-surface-variant hover:text-primary-fixed-dim hover:-translate-y-1 transition-all duration-300" href="#">LINKEDIN</a>
 <a class="font-mono-code text-mono-code text-on-surface-variant hover:text-primary-fixed-dim hover:-translate-y-1 transition-all duration-300" href="#">SOURCE</a>
@@ -890,12 +1214,29 @@
     // Three.js removed – no canvas element in DOM
     let scrollProgress = 0;
 
-    // Custom Cursor Logic
+    // Custom Cursor Logic (magnetic ring with trailing glow)
     const cursor = document.getElementById('custom-cursor');
+    let cursorTargetX = window.innerWidth / 2;
+    let cursorTargetY = window.innerHeight / 2;
+    let cursorCurrentX = cursorTargetX;
+    let cursorCurrentY = cursorTargetY;
+
     document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+        cursorTargetX = e.clientX;
+        cursorTargetY = e.clientY;
     });
+
+    function animateCursor() {
+        const deltaX = cursorTargetX - cursorCurrentX;
+        const deltaY = cursorTargetY - cursorCurrentY;
+        cursorCurrentX += deltaX * 0.18;
+        cursorCurrentY += deltaY * 0.18;
+        cursor.style.left = `${cursorCurrentX}px`;
+        cursor.style.top = `${cursorCurrentY}px`;
+        requestAnimationFrame(animateCursor);
+    }
+
+    animateCursor();
 
     document.querySelectorAll('a, button, input, textarea').forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('cursor-active'));
@@ -935,6 +1276,28 @@
     document.querySelectorAll('section').forEach(section => {
         observer.observe(section);
     });
+
+    // Active section tracking for floating nav
+    const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+    const sectionMap = navLinks
+        .map(link => ({
+            link,
+            target: document.querySelector(link.getAttribute('href'))
+        }))
+        .filter(item => item.target);
+
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const match = sectionMap.find(item => item.target === entry.target);
+            if (!match) return;
+            if (entry.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('is-active'));
+                match.link.classList.add('is-active');
+            }
+        });
+    }, { threshold: 0.55 });
+
+    sectionMap.forEach(item => navObserver.observe(item.target));
     
     // Add hover lift effect to interactive elements
     document.querySelectorAll('a, button, .glass-panel').forEach(el => {
@@ -1068,5 +1431,283 @@
         carousel.addEventListener('scroll', updateArrows, { passive: true });
         updateArrows();
     })();
+
+    // ── Scroll Stack (Projects) ─────────────────────────────────────
+    (function () {
+        const scroller = document.querySelector('.scroll-stack-scroller');
+        if (!scroller) return;
+
+        const cards = Array.from(scroller.querySelectorAll('.scroll-stack-card'));
+        const endElement = scroller.querySelector('.scroll-stack-end');
+        const lastTransforms = new Map();
+        let isUpdating = false;
+
+        const config = {
+            itemDistance: 100,
+            itemScale: 0.03,
+            itemStackDistance: 30,
+            stackPosition: '20%',
+            scaleEndPosition: '10%',
+            baseScale: 0.85,
+            rotationAmount: 0,
+            blurAmount: 0,
+            useWindowScroll: true
+        };
+
+        function calculateProgress(scrollTop, start, end) {
+            if (scrollTop < start) return 0;
+            if (scrollTop > end) return 1;
+            return (scrollTop - start) / (end - start);
+        }
+
+        function parsePercentage(value, containerHeight) {
+            if (typeof value === 'string' && value.includes('%')) {
+                return (parseFloat(value) / 100) * containerHeight;
+            }
+            return parseFloat(value);
+        }
+
+        function getScrollData() {
+            return {
+                scrollTop: window.scrollY,
+                containerHeight: window.innerHeight,
+                scrollContainer: document.documentElement
+            };
+        }
+
+        function getElementOffset(element) {
+            const rect = element.getBoundingClientRect();
+            return rect.top + window.scrollY;
+        }
+
+        function updateCardTransforms() {
+            if (!cards.length || isUpdating) return;
+            isUpdating = true;
+
+            const { scrollTop, containerHeight } = getScrollData();
+            const stackPositionPx = parsePercentage(config.stackPosition, containerHeight);
+            const scaleEndPositionPx = parsePercentage(config.scaleEndPosition, containerHeight);
+            const endElementTop = endElement ? getElementOffset(endElement) : 0;
+
+            cards.forEach((card, i) => {
+                if (!card) return;
+
+                const cardTop = getElementOffset(card);
+                const triggerStart = cardTop - stackPositionPx - config.itemStackDistance * i;
+                const triggerEnd = cardTop - scaleEndPositionPx;
+                const pinStart = cardTop - stackPositionPx - config.itemStackDistance * i;
+                const pinEnd = endElementTop - containerHeight / 2;
+
+                const scaleProgress = calculateProgress(scrollTop, triggerStart, triggerEnd);
+                const targetScale = config.baseScale + i * config.itemScale;
+                const scale = 1 - scaleProgress * (1 - targetScale);
+                const rotation = config.rotationAmount ? i * config.rotationAmount * scaleProgress : 0;
+
+                let blur = 0;
+                if (config.blurAmount) {
+                    let topCardIndex = 0;
+                    for (let j = 0; j < cards.length; j++) {
+                        const jCardTop = getElementOffset(cards[j]);
+                        const jTriggerStart = jCardTop - stackPositionPx - config.itemStackDistance * j;
+                        if (scrollTop >= jTriggerStart) {
+                            topCardIndex = j;
+                        }
+                    }
+                    if (i < topCardIndex) {
+                        const depthInStack = topCardIndex - i;
+                        blur = Math.max(0, depthInStack * config.blurAmount);
+                    }
+                }
+
+                let translateY = 0;
+                const isPinned = scrollTop >= pinStart && scrollTop <= pinEnd;
+                if (isPinned) {
+                    translateY = scrollTop - cardTop + stackPositionPx + config.itemStackDistance * i;
+                } else if (scrollTop > pinEnd) {
+                    translateY = pinEnd - cardTop + stackPositionPx + config.itemStackDistance * i;
+                }
+
+                const newTransform = {
+                    translateY: Math.round(translateY * 100) / 100,
+                    scale: Math.round(scale * 1000) / 1000,
+                    rotation: Math.round(rotation * 100) / 100,
+                    blur: Math.round(blur * 100) / 100
+                };
+
+                const lastTransform = lastTransforms.get(i);
+                const hasChanged =
+                    !lastTransform ||
+                    Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
+                    Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
+                    Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
+                    Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
+
+                if (hasChanged) {
+                    const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+                    const filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : '';
+                    card.style.transform = transform;
+                    card.style.filter = filter;
+                    lastTransforms.set(i, newTransform);
+                }
+            });
+
+            isUpdating = false;
+        }
+
+        cards.forEach((card, i) => {
+            if (i < cards.length - 1) {
+                card.style.marginBottom = `${config.itemDistance}px`;
+            }
+            card.style.willChange = 'transform, filter';
+            card.style.transformOrigin = 'top center';
+            card.style.backfaceVisibility = 'hidden';
+            card.style.transform = 'translateZ(0)';
+            card.style.webkitTransform = 'translateZ(0)';
+            card.style.perspective = '1000px';
+            card.style.webkitPerspective = '1000px';
+        });
+
+        if (window.Lenis) {
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smoothWheel: true,
+                touchMultiplier: 2,
+                infinite: false,
+                wheelMultiplier: 1,
+                lerp: 0.1,
+                syncTouch: true,
+                syncTouchLerp: 0.075
+            });
+            lenis.on('scroll', updateCardTransforms);
+            const raf = time => {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            };
+            requestAnimationFrame(raf);
+        }
+
+        window.addEventListener('scroll', updateCardTransforms, { passive: true });
+        window.addEventListener('resize', updateCardTransforms);
+        updateCardTransforms();
+    })();
+
+    // Magnetic button effect
+    const magneticItems = document.querySelectorAll('.magnetic');
+    magneticItems.forEach((item) => {
+        const strength = 18;
+        item.addEventListener('mousemove', (e) => {
+            const rect = item.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            const moveX = (x / rect.width) * strength;
+            const moveY = (y / rect.height) * strength;
+            item.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+        item.addEventListener('mouseleave', () => {
+            item.style.transform = '';
+        });
+    });
+
+    // Hero parallax for cinematic depth
+    const heroVideo = document.querySelector('section video');
+    if (heroVideo) {
+        window.addEventListener('scroll', () => {
+            const offset = Math.min(window.scrollY * 0.15, 60);
+            heroVideo.style.transform = `translateY(${offset}px)`;
+        }, { passive: true });
+    }
+
+    // Border glow interaction
+    const glowCards = document.querySelectorAll('.border-glow-card');
+    glowCards.forEach((card) => {
+        if (!card.querySelector('.border-glow-inner')) {
+            const inner = document.createElement('div');
+            inner.className = 'border-glow-inner';
+            while (card.firstChild) {
+                inner.appendChild(card.firstChild);
+            }
+            card.appendChild(inner);
+        }
+
+        const getCenter = () => {
+            const rect = card.getBoundingClientRect();
+            return [rect.width / 2, rect.height / 2, rect];
+        };
+
+        const getEdgeProximity = (x, y, rect) => {
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+            const dx = x - cx;
+            const dy = y - cy;
+            let kx = Infinity;
+            let ky = Infinity;
+            if (dx !== 0) kx = cx / Math.abs(dx);
+            if (dy !== 0) ky = cy / Math.abs(dy);
+            return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
+        };
+
+        const getAngle = (x, y, rect) => {
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+            const dx = x - cx;
+            const dy = y - cy;
+            if (dx === 0 && dy === 0) return 0;
+            const radians = Math.atan2(dy, dx);
+            let degrees = radians * (180 / Math.PI) + 90;
+            if (degrees < 0) degrees += 360;
+            return degrees;
+        };
+
+        card.addEventListener('pointermove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const edge = getEdgeProximity(x, y, rect);
+            const angle = getAngle(x, y, rect);
+            card.style.setProperty('--edge-proximity', `${(edge * 100).toFixed(3)}`);
+            card.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
+        });
+
+        card.addEventListener('pointerleave', () => {
+            card.style.setProperty('--edge-proximity', '0');
+        });
+    });
+
+    // Split text reveal (vanilla replacement for GSAP SplitText)
+    const splitTargets = document.querySelectorAll('h1, h2, h3, h4, h5, p');
+    splitTargets.forEach((el) => {
+        if (el.closest('button, a, label')) return;
+        if (el.classList.contains('no-split')) return;
+        const text = el.textContent;
+        if (!text || !text.trim()) return;
+
+        el.setAttribute('aria-label', text.trim());
+        el.classList.add('split-text');
+        el.textContent = '';
+
+        const fragment = document.createDocumentFragment();
+        [...text].forEach((char) => {
+            const span = document.createElement('span');
+            span.className = 'split-char';
+            span.textContent = char === ' ' ? '\u00A0' : char;
+            fragment.appendChild(span);
+        });
+        el.appendChild(fragment);
+    });
+
+    const splitObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const chars = entry.target.querySelectorAll('.split-char');
+            chars.forEach((char, index) => {
+                char.style.transitionDelay = `${index * 0.012}s`;
+            });
+            entry.target.classList.add('is-revealed');
+            splitObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.1, rootMargin: '-100px' });
+
+    document.querySelectorAll('.split-text').forEach((el) => splitObserver.observe(el));
 </script>
 </body></html>
